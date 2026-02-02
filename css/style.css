@@ -253,6 +253,64 @@ body::before {
     border-left: 3px solid var(--gold);
 }
 
+/* Birth Info Grid - Hiển thị đầy đủ ngày tháng năm */
+.birth-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.birth-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.birth-info-item .info-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.birth-info-item .info-value {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.birth-info-item .info-value.highlight {
+    color: var(--gold);
+    font-weight: 600;
+}
+
+.compat-box {
+    margin-top: 16px;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.05));
+    border-radius: 12px;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.compat-box .compat-title {
+    font-weight: 600;
+    color: var(--excellent);
+    margin-bottom: 8px;
+}
+
+.compat-box .compat-detail {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.compat-box .compat-detail strong {
+    color: var(--gold);
+}
+
 /* === CALENDAR === */
 #calendar-container {
     background: var(--bg-card);

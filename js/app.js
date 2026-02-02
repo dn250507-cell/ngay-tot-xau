@@ -29,25 +29,69 @@ document.addEventListener('DOMContentLoaded', function () {
         // Tạo object thông tin sinh
         const birthInfo = { year, month, day };
 
-        // Phân tích mệnh
+        // Phân tích đầy đủ theo NGÀY, THÁNG, NĂM
         const destiny = CuuCung.analyzeDestiny(year, gender);
+
+        // NĂM SINH: Can Chi năm
         const canChiYear = LunarConverter.getCanChiYear(year);
+
+        // NGÀY SINH: Can Chi ngày (dương lịch)
         const canChiDay = LunarConverter.getCanChiDay(year, month, day);
 
-        // Hiển thị thông tin người dùng
+        // NGÀY SINH: Chuyển sang Âm lịch
+        const lunarBirth = LunarConverter.solarToLunar(year, month, day);
+        const lunarBirthFormatted = lunarBirth ?
+            LunarConverter.formatLunarDate(lunarBirth) : null;
+
+        // THÁNG SINH: Can Chi tháng
+        const canChiMonth = LunarConverter.getCanChiMonth(year, month);
+
+        // Lục Hợp với Chi ngày sinh
+        const lucHopChi = {
+            'Tý': 'Sửu', 'Sửu': 'Tý',
+            'Dần': 'Hợi', 'Hợi': 'Dần',
+            'Mão': 'Tuất', 'Tuất': 'Mão',
+            'Thìn': 'Dậu', 'Dậu': 'Thìn',
+            'Tỵ': 'Thân', 'Thân': 'Tỵ',
+            'Ngọ': 'Mùi', 'Mùi': 'Ngọ'
+        };
+
+        // Hiển thị thông tin người dùng đầy đủ
         userInfoSection.innerHTML = `
             <div class="user-card">
                 <div class="user-avatar">${destiny.cungInfo.icon}</div>
                 <div class="user-details">
                     <h3>${gender === 'male' ? '👨 Nam' : '👩 Nữ'} - Sinh ngày ${day}/${month}/${year}</h3>
-                    <p class="can-chi">Năm ${canChiYear.full} (${canChiYear.conGiap})</p>
-                    <p class="birth-day-chi">📅 Ngày sinh: <strong>${canChiDay.full}</strong> (Chi: ${canChiDay.chi})</p>
+                    
+                    <div class="birth-info-grid">
+                        <div class="birth-info-item">
+                            <span class="info-label">📅 Ngày sinh (Âm lịch):</span>
+                            <span class="info-value">${lunarBirthFormatted ? lunarBirthFormatted.formatted : 'N/A'}</span>
+                        </div>
+                        <div class="birth-info-item">
+                            <span class="info-label">🌙 Can Chi NGÀY sinh:</span>
+                            <span class="info-value highlight">${canChiDay.full}</span>
+                        </div>
+                        <div class="birth-info-item">
+                            <span class="info-label">📆 Can Chi THÁNG sinh:</span>
+                            <span class="info-value">${canChiMonth.full}</span>
+                        </div>
+                        <div class="birth-info-item">
+                            <span class="info-label">🎋 Can Chi NĂM sinh:</span>
+                            <span class="info-value">${canChiYear.full} (${canChiYear.conGiap})</span>
+                        </div>
+                    </div>
+                    
                     <p class="cung-menh ${destiny.cungInfo.colorClass}">
-                        Mệnh: ${destiny.cungInfo.name} (${destiny.cungInfo.element})
+                        🔮 Cung mệnh: ${destiny.cungInfo.name} (${destiny.cungInfo.element})
                     </p>
                     <p class="description">${destiny.cungInfo.description}</p>
                     <p class="advice">💡 ${destiny.advice}</p>
-                    <p class="compat-note">🔮 Ngày <strong>Lục Hợp</strong> với Chi ${canChiDay.chi} của bạn sẽ được đánh dấu 💑</p>
+                    
+                    <div class="compat-box">
+                        <p class="compat-title">🎯 Ngày đặc biệt TỐT cho bạn:</p>
+                        <p class="compat-detail">Chi ngày sinh của bạn là <strong>${canChiDay.chi}</strong> → Ngày có Chi <strong>${lucHopChi[canChiDay.chi]}</strong> sẽ <strong>Lục Hợp</strong> với bạn (đánh dấu 💑)</p>
+                    </div>
                 </div>
             </div>
         `;
