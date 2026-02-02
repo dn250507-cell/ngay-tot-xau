@@ -1,64 +1,124 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Ứng dụng tính ngày tốt xấu theo kinh nghiệm dân gian Việt Nam dựa trên ngày sinh và giới tính">
-    <title>Tính Ngày Tốt Xấu | Lịch Âm Dương Việt Nam</title>
+    <meta name="description"
+        content="Ứng dụng tính ngày tốt xấu và bói Tarot tình yêu theo kinh nghiệm dân gian Việt Nam">
+    <title>Tính Ngày Tốt Xấu & Bói Tarot | Lịch Âm Dương Việt Nam</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☯</text></svg>">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☯</text></svg>">
 </head>
+
 <body>
     <!-- Header -->
     <header class="header">
-        <h1>☯ Tính Ngày Tốt Xấu</h1>
-        <p>Theo kinh nghiệm dân gian Việt Nam</p>
+        <h1>☯ Tâm Linh Việt</h1>
+        <p>Ngày tốt xấu & Bói Tarot tình yêu</p>
     </header>
 
+    <!-- Navigation Tabs -->
+    <nav class="main-nav">
+        <button class="nav-tab active" data-tab="calendar-tab" onclick="switchTab('calendar-tab')">
+            📅 Ngày Tốt Xấu
+        </button>
+        <button class="nav-tab" data-tab="tarot-tab" onclick="switchTab('tarot-tab')">
+            🔮 Bói Tarot Tình Yêu
+        </button>
+    </nav>
+
     <main class="container">
-        <!-- Form Section -->
-        <section class="form-section">
-            <h2 class="form-title">📅 Nhập thông tin của bạn</h2>
-            <form id="birth-form">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="birth-day">Ngày sinh</label>
-                        <input type="number" id="birth-day" min="1" max="31" placeholder="VD: 15" required>
+        <!-- TAB 1: Ngày Tốt Xấu -->
+        <div id="calendar-tab" class="tab-content active">
+            <!-- Form Section -->
+            <section class="form-section">
+                <h2 class="form-title">📅 Nhập thông tin của bạn</h2>
+                <form id="birth-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="birth-day">Ngày sinh</label>
+                            <input type="number" id="birth-day" min="1" max="31" placeholder="VD: 15" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="birth-month">Tháng sinh</label>
+                            <input type="number" id="birth-month" min="1" max="12" placeholder="VD: 8" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="birth-year">Năm sinh (Dương lịch)</label>
+                            <input type="number" id="birth-year" min="1900" max="2100" placeholder="VD: 1990" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Giới tính</label>
+                            <select id="gender" required>
+                                <option value="">-- Chọn --</option>
+                                <option value="male">Nam</option>
+                                <option value="female">Nữ</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="birth-month">Tháng sinh</label>
-                        <input type="number" id="birth-month" min="1" max="12" placeholder="VD: 8" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="birth-year">Năm sinh (Dương lịch)</label>
-                        <input type="number" id="birth-year" min="1900" max="2100" placeholder="VD: 1990" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="gender">Giới tính</label>
-                        <select id="gender" required>
-                            <option value="">-- Chọn --</option>
-                            <option value="male">Nam</option>
-                            <option value="female">Nữ</option>
-                        </select>
-                    </div>
-                </div>
-                <button type="submit" class="submit-btn">
-                    🔮 Xem Ngày Tốt Xấu
-                </button>
-            </form>
-        </section>
+                    <button type="submit" class="submit-btn">
+                        🔮 Xem Ngày Tốt Xấu
+                    </button>
+                </form>
+            </section>
 
-        <!-- Result Section -->
-        <section id="result-section" class="result-section">
-            <!-- User Info -->
-            <div id="user-info"></div>
+            <!-- Result Section -->
+            <section id="result-section" class="result-section">
+                <div id="user-info"></div>
+                <div id="calendar-container"></div>
+                <div id="legend"></div>
+            </section>
+        </div>
 
-            <!-- Calendar -->
-            <div id="calendar-container"></div>
+        <!-- TAB 2: Bói Tarot -->
+        <div id="tarot-tab" class="tab-content">
+            <!-- Tarot Form Section -->
+            <section id="tarot-form-section" class="form-section tarot-theme">
+                <h2 class="form-title">🔮 Bói Tarot Tình Yêu</h2>
+                <p class="tarot-intro">Bộ bài <strong>Whispers of Love Oracle</strong> - 50 lá bài về tình yêu và mối
+                    quan hệ</p>
 
-            <!-- Legend -->
-            <div id="legend"></div>
-        </section>
+                <form id="tarot-form">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="tarot-question">💕 Câu hỏi của bạn</label>
+                            <select id="tarot-question" required>
+                                <option value="">-- Chọn câu hỏi --</option>
+                                <option value="current_love">💕 Tình yêu hiện tại của tôi như thế nào?</option>
+                                <option value="heal_relationship">💔 Làm sao để hàn gắn mối quan hệ?</option>
+                                <option value="find_love">🌹 Khi nào tôi sẽ gặp được tình yêu đích thực?</option>
+                                <option value="continue_relationship">💑 Mối quan hệ này có nên tiếp tục?</option>
+                                <option value="improve_love">✨ Làm thế nào để cải thiện tình yêu?</option>
+                                <option value="other">✍️ Câu hỏi khác...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full-width" id="custom-question-wrapper" style="display: none;">
+                            <label for="custom-question">✍️ Nhập câu hỏi của bạn</label>
+                            <input type="text" id="custom-question" placeholder="VD: Người ấy có còn yêu tôi không?">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="spread-type">🃏 Kiểu trải bài</label>
+                            <select id="spread-type" required>
+                                <option value="single">1 lá - Thông điệp chính</option>
+                                <option value="threeCard" selected>3 lá - Quá khứ, Hiện tại, Tương lai</option>
+                                <option value="fiveCard">5 lá - Trải bài tình yêu đầy đủ</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn tarot-btn">
+                        🎴 Xáo Bài & Rút Bài
+                    </button>
+                </form>
+            </section>
+
+            <!-- Tarot Result Section -->
+            <section id="tarot-result" class="tarot-result-section"></section>
+        </div>
     </main>
 
     <!-- Detail Modal -->
@@ -69,12 +129,33 @@
         </div>
     </div>
 
+    <!-- Tab Switching Script -->
+    <script>
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Remove active from all nav buttons
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            // Add active to clicked button
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+        }
+    </script>
+
     <!-- Scripts -->
     <script src="data/constants.js"></script>
+    <script src="data/tarot-data.js"></script>
     <script src="js/lunar-converter.js"></script>
     <script src="js/cuu-cung.js"></script>
     <script src="js/ngay-tot-xau.js"></script>
     <script src="js/calendar-ui.js"></script>
+    <script src="js/tarot.js"></script>
     <script src="js/app.js"></script>
 </body>
+
 </html>
