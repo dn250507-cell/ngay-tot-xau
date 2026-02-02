@@ -1,13 +1,19 @@
 /**
  * Calendar UI - Giao diện lịch tháng
+ * CẬP NHẬT: Hỗ trợ đầy đủ ngày, tháng, năm sinh
  */
 
 const CalendarUI = (function () {
-    let currentYear, currentMonth, birthYear, gender;
+    let currentYear, currentMonth, birthInfo, gender;
     let monthData = [];
 
-    function init(bYear, gen) {
-        birthYear = bYear;
+    function init(bInfo, gen) {
+        // bInfo có thể là object {year, month, day} hoặc số (năm sinh)
+        if (typeof bInfo === 'object') {
+            birthInfo = bInfo;
+        } else {
+            birthInfo = { year: bInfo, month: 1, day: 1 };
+        }
         gender = gen;
         const now = new Date();
         currentYear = now.getFullYear();
@@ -16,7 +22,7 @@ const CalendarUI = (function () {
     }
 
     function render() {
-        monthData = NgayTotXau.getMonthAnalysis(birthYear, gender, currentYear, currentMonth);
+        monthData = NgayTotXau.getMonthAnalysis(birthInfo, gender, currentYear, currentMonth);
         renderCalendar();
         renderLegend();
     }
@@ -48,12 +54,15 @@ const CalendarUI = (function () {
             const lunar = dayData?.lunar;
             const quality = dayData?.quality || 'neutral';
             const isToday = isCurrentDate(day);
+            const hasCompatibility = dayData?.compatibility?.lucHop || dayData?.compatibility?.lucXung;
 
             html += `
-                <div class="day-cell quality-${quality} ${isToday ? 'today' : ''}" 
+                <div class="day-cell quality-${quality} ${isToday ? 'today' : ''} ${hasCompatibility ? 'has-compat' : ''}" 
                      onclick="CalendarUI.showDetail(${day})">
                     <span class="solar-day">${day}</span>
                     <span class="lunar-day">${lunar?.day || ''}/${lunar?.month || ''}</span>
+                    ${dayData?.compatibility?.lucHop ? '<span class="compat-icon">💑</span>' : ''}
+                    ${dayData?.compatibility?.lucXung ? '<span class="compat-icon">⚔️</span>' : ''}
                 </div>
             `;
         }
@@ -70,6 +79,8 @@ const CalendarUI = (function () {
             <div class="legend-item"><span class="dot quality-neutral"></span>Bình thường</div>
             <div class="legend-item"><span class="dot quality-bad"></span>Xấu</div>
             <div class="legend-item"><span class="dot quality-terrible"></span>Đại Hung</div>
+            <div class="legend-item"><span class="compat-icon-legend">💑</span>Lục Hợp với bạn</div>
+            <div class="legend-item"><span class="compat-icon-legend">⚔️</span>Lục Xung với bạn</div>
         `;
     }
 
@@ -80,13 +91,36 @@ const CalendarUI = (function () {
         const modal = document.getElementById('detail-modal');
         const content = document.getElementById('detail-content');
 
+        // Thông tin tương hợp cá nhân
+        const compatHtml = dayData.compatibility ? `
+            <div class="info-row personal-compat">
+                <span class="label">🎯 Tương hợp với bạn:</span>
+                <span class="value ${dayData.compatibility.score > 0 ? 'positive' : dayData.compatibility.score < 0 ? 'negative' : ''}">
+                    ${dayData.compatibility.description || 'Bình thường'}
+                </span>
+            </div>
+            <div class="info-row">
+                <span class="label">Chi ngày sinh của bạn:</span>
+                <span class="value">${dayData.compatibility.birthChi}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Chi ngày xem:</span>
+                <span class="value">${dayData.compatibility.dayChi}</span>
+            </div>
+        ` : '';
+
         content.innerHTML = `
             <div class="detail-header quality-${dayData.quality}">
                 <h3>${dayData.solar.day}/${dayData.solar.month}/${dayData.solar.year}</h3>
                 <p class="lunar-info">Âm lịch: ${dayData.lunar.formatted}</p>
                 <span class="quality-badge">${dayData.label}</span>
+                <div class="score-display">Điểm: ${dayData.score}/100</div>
             </div>
             <div class="detail-body">
+                <div class="section-title">📌 Phân tích cá nhân (theo ngày sinh của bạn)</div>
+                ${compatHtml}
+                
+                <div class="section-title">📅 Thông tin chung</div>
                 <div class="info-row">
                     <span class="label">Can Chi ngày:</span>
                     <span class="value">${dayData.canChiDay.full}</span>
@@ -106,7 +140,7 @@ const CalendarUI = (function () {
                 ${dayData.tamNuong ? '<div class="warning">⚠️ Ngày Tam Nương - Không nên làm việc lớn</div>' : ''}
                 ${dayData.nguyetKy ? '<div class="warning">⚠️ Ngày Nguyệt Kỵ - Tránh xuất hành</div>' : ''}
                 <div class="factors">
-                    <h4>Phân tích chi tiết:</h4>
+                    <h4>📊 Tổng hợp các yếu tố:</h4>
                     ${dayData.factors.map(f => `<p class="factor-${f.type}">${f.text}</p>`).join('')}
                 </div>
             </div>
